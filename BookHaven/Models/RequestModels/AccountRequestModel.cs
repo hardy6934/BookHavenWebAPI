@@ -1,12 +1,16 @@
-﻿ 
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace BookHaven.Core.DataTransferObjects
+namespace BookHaven.Models.RequestModels
 {
-    public class AccountDTO
+    public class AccountRequestModel
     {
-        public int Id { get; set; }
+        [Required]
+        [EmailAddress]
         public string Email { get; set; }
+        [Required]
+        [MinLength(5)]
         public string PasswordHash { get; set; }
+        [Required]
         public string FullName { get; set; }
         public string? Adress { get; set; }
         public string? PhoneNumber { get; set; }

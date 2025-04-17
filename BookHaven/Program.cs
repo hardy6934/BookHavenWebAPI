@@ -1,4 +1,5 @@
-
+using BookHaven.Buisness.Services;
+using BookHaven.Core.Abstractions;
 using BookHaven.CQS.Commands;
 using BookHaven.Database;
 using Microsoft.EntityFrameworkCore;
@@ -23,7 +24,7 @@ namespace BookHaven
             builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining(typeof(AddAccountCommand)));
 
             //dependency Injection Services 
-            //builder.Services.AddScoped<qwe, qwe>();
+            builder.Services.AddScoped<IAccountService, AccountService>();
 
 
             builder.Services.AddControllers();
@@ -33,12 +34,14 @@ namespace BookHaven
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+            //// Configure the HTTP request pipeline.
+            //if (app.Environment.IsDevelopment())
+            //{
+            //    app.UseSwagger();
+            //    app.UseSwaggerUI();
+            //}
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             app.UseHttpsRedirection();
 

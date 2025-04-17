@@ -6,5 +6,6 @@ namespace BookHaven.Core.Abstractions
     {
         Task<AccountDTO> GetAccountByEmailAsync(string email);
         Task<AccountDTO> GetAccountByIdAsync(int id);
+        Task<int> CreateAccountAsync(AccountDTO dto);
     }
 }

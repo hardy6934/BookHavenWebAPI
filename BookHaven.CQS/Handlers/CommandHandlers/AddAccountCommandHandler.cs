@@ -1,7 +1,4 @@
-﻿
-
-using AutoMapper;
-using BookHaven.Core.DataTransferObjects;
+﻿using AutoMapper;
 using BookHaven.CQS.Commands;
 using BookHaven.Database;
 using BookHaven.Database.Entities;

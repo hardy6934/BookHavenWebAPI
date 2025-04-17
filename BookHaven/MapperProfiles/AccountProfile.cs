@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using BookHaven.Core.DataTransferObjects;
 using BookHaven.Database.Entities;
+using BookHaven.Models.RequestModels;
+using BookHaven.Models.ResponseModels;
 
 namespace BookHaven.MapperProfiles
 {
@@ -8,7 +10,14 @@ namespace BookHaven.MapperProfiles
     {
         public AccountProfile()
         { 
-            CreateMap<Account, AccountDTO>().ReverseMap();  
+            CreateMap<Account, AccountDTO>();  
+            CreateMap<AccountDTO, Account>();  
+
+            CreateMap<AccountDTO, AccountRequestModel>();  
+            CreateMap<AccountRequestModel, AccountDTO>();  
+
+            CreateMap<AccountResponseModel, AccountDTO>();  
+            CreateMap<AccountDTO, AccountResponseModel>();  
         }
     }
 }
