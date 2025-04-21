@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using BookHaven.CQS.Commands;
-using BookHaven.Database;
-using BookHaven.Database.Entities;
-using MediatR; 
+using BookHavenWebAPI.CQS.Commands.AccountHandlers;
+using BookHavenWebAPI.Database;
+using BookHavenWebAPI.Database.Entities;
+using MediatR;
 
-namespace BookHaven.CQS.Handlers.CommandHandlers
+namespace BookHavenWebAPI.CQS.Handlers.CommandHandlers.AccountCommandHandlers
 {
     public class AddAccountCommandHandler: IRequestHandler<AddAccountCommand, int>
     {
@@ -19,7 +19,7 @@ namespace BookHaven.CQS.Handlers.CommandHandlers
 
         public async Task<int> Handle(AddAccountCommand request, CancellationToken cancellationToken)
         {
-            var entEntry = await context.Accounts.AddAsync(mapper.Map<Account>(request.accountDTO));
+            var entEntry = await context.Accounts.AddAsync(mapper.Map<Account>(request.accountDTO), cancellationToken);
             await context.SaveChangesAsync(cancellationToken);
 
             return entEntry.Entity.Id; 

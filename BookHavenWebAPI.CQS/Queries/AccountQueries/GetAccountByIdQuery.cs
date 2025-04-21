@@ -1,9 +1,7 @@
-﻿
-
-using BookHaven.Core.DataTransferObjects;
+﻿using BookHavenWebAPI.Core.DataTransferObjects;
 using MediatR;
 
-namespace BookHaven.CQS.Queries
+namespace BookHavenWebAPI.CQS.Queries.AccountQueries
 {
     public class GetAccountByIdQuery: IRequest<AccountDTO>
     {

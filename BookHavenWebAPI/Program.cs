@@ -1,7 +1,12 @@
-
+using BookHavenWebAPI.Buisness.Services;
+using BookHavenWebAPI.Core.Abstractions;
+using BookHavenWebAPI.CQS.Commands.AccountCommands;
+using BookHavenWebAPI.Database;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
 using System.Text;
 
 namespace BookHavenWebAPI
@@ -12,15 +17,36 @@ namespace BookHavenWebAPI
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            // Add services to the container. 
+
+            // Настройка Serilog
+            Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Information()
+            .WriteTo.Console()
+            .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
+            .CreateLogger();
+
+            //dependency Injection DataBase
+            var connectionString = builder.Configuration.GetConnectionString("Default");
+            builder.Services.AddDbContext<BookHavenContext>(optionsBuilder => optionsBuilder.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
+
+            //dependency Injection AutoMapper
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            //dependency Injection Handlers  
+            builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining(typeof(AddAccountCommand)));
+             
+            //Dependency Injection Services
+            builder.Services.AddScoped<IAccountService, AccountService>();
+
+
 
             builder.Services.AddControllers();
-            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi  
             builder.Services.AddOpenApi();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(options =>
-            {
-                options.IncludeXmlComments(builder.Configuration["XmlDoc"]);
+            { 
 
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {

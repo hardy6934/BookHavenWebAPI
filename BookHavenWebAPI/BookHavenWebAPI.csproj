@@ -21,9 +21,17 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+    <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="8.1.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="8.1.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="8.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BookHavenWebAPI.Buisness\BookHavenWebAPI.Buisness.csproj" />
+    <ProjectReference Include="..\BookHavenWebAPI.Core\BookHavenWebAPI.Core.csproj" />
+    <ProjectReference Include="..\BookHavenWebAPI.CQS\BookHavenWebAPI.CQS.csproj" />
+    <ProjectReference Include="..\BookHavenWebAPI.DataBase\BookHavenWebAPI.DataBase.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,6 @@
-﻿ 
+﻿
 
-namespace BookHaven.Core.DataTransferObjects
+namespace BookHavenWebAPI.Core.DataTransferObjects
 {
     public class RefreshTokenDTO
     {

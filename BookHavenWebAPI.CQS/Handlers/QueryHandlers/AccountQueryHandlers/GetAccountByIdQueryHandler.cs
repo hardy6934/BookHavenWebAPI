@@ -1,13 +1,12 @@
 ﻿
-
 using AutoMapper;
-using BookHaven.Core.DataTransferObjects;
-using BookHaven.CQS.Queries;
-using BookHaven.Database;
+using BookHavenWebAPI.Core.DataTransferObjects;
+using BookHavenWebAPI.CQS.Queries.AccountQueries;
+using BookHavenWebAPI.Database;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace BookHaven.CQS.Handlers.QueryHandler
+namespace BookHavenWebAPI.CQS.Handlers.QueryHandlers.AccountQueryHandlers
 {
     class GetAccountByIdQueryHandler : IRequestHandler<GetAccountByIdQuery, AccountDTO>
     {

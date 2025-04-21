@@ -1,11 +1,12 @@
-﻿using BookHaven.Core.DataTransferObjects;
+﻿using BookHavenWebAPI.Core.DataTransferObjects;
 
-namespace BookHaven.Core.Abstractions
+namespace BookHavenWebAPI.Core.Abstractions
 {
     public interface IAccountService
     {
         Task<AccountDTO> GetAccountByEmailAsync(string email);
         Task<AccountDTO> GetAccountByIdAsync(int id);
         Task<int> CreateAccountAsync(AccountDTO dto);
+        Task<bool> CheckUserPassword(AccountDTO dto);
     }
 }

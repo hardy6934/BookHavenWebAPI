@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
-using BookHaven.Core.Abstractions;
-using BookHaven.Core.DataTransferObjects;
-using BookHaven.CQS.Commands;
-using BookHaven.CQS.Queries;
+using BookHavenWebAPI.Core.Abstractions;
+using BookHavenWebAPI.Core.DataTransferObjects;
+using BookHavenWebAPI.CQS.Commands.AccountCommands;
+using BookHavenWebAPI.CQS.Queries.AccountQueries;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using System.Security.Cryptography;
 
-namespace BookHaven.Buisness.Services
+namespace BookHavenWebAPI.Buisness.Services
 {
     public class AccountService : IAccountService
     {

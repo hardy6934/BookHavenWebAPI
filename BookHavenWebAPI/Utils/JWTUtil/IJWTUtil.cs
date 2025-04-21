@@ -1,7 +1,7 @@
-﻿using BookHaven.Core.DataTransferObjects;
-using BookHaven.Models.ResponseModels;
+﻿using BookHavenWebAPI.Core.DataTransferObjects;
+using BookHavenWebAPI.Models.ResponseModels;
 
-namespace BookHaven.Utils.JWTUtil
+namespace BookHavenWebAPI.Utils.JWTUtil
 {
     public interface IJWTUtil
     {

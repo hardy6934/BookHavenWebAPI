@@ -1,4 +1,4 @@
-﻿namespace BookHaven.Models.ResponseModels
+﻿namespace BookHavenWebAPI.Models.ResponseModels
 {
     public class TokenResponseModel
     {

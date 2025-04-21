@@ -1,6 +1,5 @@
-﻿ 
-
-namespace BookHaven.Database.Entities
+﻿
+namespace BookHavenWebAPI.Database.Entities
 {
     public class RefreshToken: IBaseEntity
     {

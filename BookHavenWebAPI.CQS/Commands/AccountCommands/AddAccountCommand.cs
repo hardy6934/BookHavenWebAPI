@@ -1,7 +1,7 @@
-﻿using BookHaven.Core.DataTransferObjects;
+﻿using BookHavenWebAPI.Core.DataTransferObjects;
 using MediatR;
 
-namespace BookHaven.CQS.Commands
+namespace BookHavenWebAPI.CQS.Commands.AccountCommands
 {
     public class AddAccountCommand: IRequest<int>
     {

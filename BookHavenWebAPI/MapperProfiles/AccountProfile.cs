@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using BookHaven.Core.DataTransferObjects;
-using BookHaven.Database.Entities;
-using BookHaven.Models.RequestModels;
-using BookHaven.Models.ResponseModels;
+using BookHavenWebAPI.Core.DataTransferObjects;
+using BookHavenWebAPI.Database.Entities;
+using BookHavenWebAPI.Models.RequestModels;
+using BookHavenWebAPI.Models.ResponseModels;
 
-namespace BookHaven.MapperProfiles
+namespace BookHavenWebAPI.MapperProfiles
 {
     public class AccountProfile: Profile
     {

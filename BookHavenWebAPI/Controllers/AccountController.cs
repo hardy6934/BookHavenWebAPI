@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
-using BookHaven.Core.Abstractions;
-using BookHaven.Core.DataTransferObjects;
-using BookHaven.Models.RequestModels;
-using BookHaven.Models.ResponseModels;
+using BookHavenWebAPI.Core.Abstractions;
+using BookHavenWebAPI.Core.DataTransferObjects;
+using BookHavenWebAPI.Models.RequestModels;
+using BookHavenWebAPI.Models.ResponseModels;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BookHaven.Controllers
+namespace BookHavenWebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

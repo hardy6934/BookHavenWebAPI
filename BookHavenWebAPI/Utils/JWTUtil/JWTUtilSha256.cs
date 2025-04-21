@@ -1,12 +1,12 @@
-﻿using BookHaven.Core.Abstractions;
-using BookHaven.Core.DataTransferObjects;
-using BookHaven.Models.ResponseModels;
+﻿using BookHavenWebAPI.Core.Abstractions;
+using BookHavenWebAPI.Core.DataTransferObjects;
+using BookHavenWebAPI.Models.ResponseModels;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace BookHaven.Utils.JWTUtil
+namespace BookHavenWebAPI.Utils.JWTUtil
 {
     public class JWTUtilSha256: IJWTUtil
     {

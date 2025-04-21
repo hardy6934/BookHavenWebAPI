@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BookHaven.Models.RequestModels
+namespace BookHavenWebAPI.Models.RequestModels
 {
     public class AccountRequestModel
     {
