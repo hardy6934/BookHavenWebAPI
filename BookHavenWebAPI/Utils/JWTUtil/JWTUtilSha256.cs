@@ -1,5 +1,6 @@
 ﻿using BookHavenWebAPI.Core.Abstractions;
 using BookHavenWebAPI.Core.DataTransferObjects;
+using BookHavenWebAPI.CQS.Commands.RefreshTokenCommands;
 using BookHavenWebAPI.Models.ResponseModels;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -11,15 +12,15 @@ namespace BookHavenWebAPI.Utils.JWTUtil
     public class JWTUtilSha256: IJWTUtil
     {
         private readonly IConfiguration configuration;
-        private readonly IAccountService accountService;
+        private readonly IRefreshTokenService refreshTokenService;
 
-        public JWTUtilSha256(IConfiguration configuration, IAccountService accountService)
+        public JWTUtilSha256(IConfiguration configuration, IRefreshTokenService refreshTokenService)
         {
-            this.configuration = configuration;
-            this.accountService = accountService;
+            this.configuration = configuration; 
+            this.refreshTokenService = refreshTokenService;
         }
 
-        public TokenResponseModel GenerateToken(AccountDTO dto)
+        public async Task<TokenResponseModel> GenerateTokenAsync(AccountDTO dto)
         {  
             var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Token:JWTSecret"]));
             var credentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
@@ -41,11 +42,21 @@ namespace BookHavenWebAPI.Utils.JWTUtil
 
             var accestoken = new JwtSecurityTokenHandler().WriteToken(JWTToken);
 
+            var refreshTokenDTO = new RefreshTokenDTO()
+            {
+                Token = Guid.NewGuid(),
+                CreationDateTimeUTC = DateTime.UtcNow,
+                DeviceName = "Unknown",
+                AccountId = dto.Id
+            };
+            await refreshTokenService.CreateRefreshTokenAsync(refreshTokenDTO);
+
             return new TokenResponseModel()
             {
                 AccesToken = accestoken,
                 TokenExp = JWTToken.ValidTo,
-                AccountId = dto.Id
+                AccountId = dto.Id,
+                RefreshToken = refreshTokenDTO.Token
             };
         }
     }

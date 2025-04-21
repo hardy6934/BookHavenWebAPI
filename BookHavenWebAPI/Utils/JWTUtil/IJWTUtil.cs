@@ -5,6 +5,6 @@ namespace BookHavenWebAPI.Utils.JWTUtil
 {
     public interface IJWTUtil
     {
-        TokenResponseModel GenerateToken(AccountDTO dto);
+        Task<TokenResponseModel> GenerateTokenAsync(AccountDTO dto);
     }
 }
