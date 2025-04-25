@@ -1,11 +1,9 @@
 ﻿using BookHavenWebAPI.Core.Abstractions;
 using BookHavenWebAPI.Core.DataTransferObjects;  
-using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+using AutoMapper; 
 using MediatR;
 using BookHavenWebAPI.CQS.Commands.RefreshTokenCommands;
-using BookHavenWebAPI.CQS.Queries.RefreshTokenQueries;
-using BookHavenWebAPI.Database.Entities;
+using BookHavenWebAPI.CQS.Queries.RefreshTokenQueries; 
 using BookHavenWebAPI.CQS.Queries.AccountQueries;
 
 namespace Accessor.Buisness.Services

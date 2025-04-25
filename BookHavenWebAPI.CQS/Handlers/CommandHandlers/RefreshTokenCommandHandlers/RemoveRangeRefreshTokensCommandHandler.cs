@@ -22,7 +22,5 @@ namespace BookHavenWebAPI.CQS.Handlers.CommandHandlers.RefreshTokenCommandHandle
 
             return await context.SaveChangesAsync(cancellationToken);  
         }
-    }
-    {
-    }
+    }  
 }

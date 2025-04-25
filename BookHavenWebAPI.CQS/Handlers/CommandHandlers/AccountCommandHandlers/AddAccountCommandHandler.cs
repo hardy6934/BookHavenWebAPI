@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using BookHavenWebAPI.CQS.Commands.AccountHandlers;
+using BookHavenWebAPI.CQS.Commands.AccountCommands;
 using BookHavenWebAPI.Database;
 using BookHavenWebAPI.Database.Entities;
 using MediatR;
