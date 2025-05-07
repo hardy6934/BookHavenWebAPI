@@ -26,7 +26,7 @@ namespace BookHavenWebAPI.CQS.Handlers.QueryHandlers.AccountQueryHandlers
 
             if (refreshToken is not null)
             {
-                var account = await context.Accounts.AsNoTracking().FirstOrDefaultAsync(x => x.Id.Equals(refreshToken.Id), cancellationToken);
+                var account = await context.Accounts.AsNoTracking().FirstOrDefaultAsync(x => x.Id.Equals(refreshToken.AccountId), cancellationToken);
                 return mapper.Map<AccountDTO>(account);
             }
             else return null;

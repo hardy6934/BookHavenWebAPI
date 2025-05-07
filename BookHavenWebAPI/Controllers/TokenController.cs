@@ -46,7 +46,7 @@ namespace BookHavenWebAPI.Controllers
                     return BadRequest(new { Message = "Password is incorrect" }); 
 
 
-                var response = jwtUtil.GenerateTokenAsync(accountDTO);
+                var response = await jwtUtil.GenerateTokenAsync(accountDTO);
 
                 return Ok(response);
             }
@@ -71,7 +71,7 @@ namespace BookHavenWebAPI.Controllers
             try
             {
 
-                var refreshTokenDTO = await refreshTokenService.GetRefreshTokenByTokenAsNoTrackingAsync(model.Token);
+                var refreshTokenDTO = await refreshTokenService.GetRefreshTokenByTokenAsNoTrackingAsync(model.RefreshToken);
                 if (refreshTokenDTO is not null)
                 {
                     var res = await refreshTokenService.RemoveRefreshTokenAsync(refreshTokenDTO);
@@ -99,8 +99,8 @@ namespace BookHavenWebAPI.Controllers
         {
             try
             { 
-                var accountDTO = await refreshTokenService.GetAccountByRefreshTokensTokenAsNoTrackingAsync(model.Token);
-                var refreshTokenDTO = await refreshTokenService.GetRefreshTokenByTokenAsNoTrackingAsync(model.Token);
+                var accountDTO = await refreshTokenService.GetAccountByRefreshTokensTokenAsNoTrackingAsync(model.RefreshToken);
+                var refreshTokenDTO = await refreshTokenService.GetRefreshTokenByTokenAsNoTrackingAsync(model.RefreshToken);
 
                 if (accountDTO is not null && refreshTokenDTO is not null)
                 {

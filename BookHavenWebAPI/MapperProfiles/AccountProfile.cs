@@ -17,7 +17,9 @@ namespace BookHavenWebAPI.MapperProfiles
             CreateMap<AccountRequestModel, AccountDTO>();  
 
             CreateMap<AccountResponseModel, AccountDTO>();  
-            CreateMap<AccountDTO, AccountResponseModel>();  
+            CreateMap<AccountDTO, AccountResponseModel>(); 
+
+            CreateMap<AuthenticationRequestModel, AccountDTO>().ForMember(dto=>dto.PasswordHash, opt=>opt.MapFrom(model=>model.Password));  
         }
     }
 }

@@ -1,7 +1,9 @@
+using Accessor.Buisness.Services;
 using BookHavenWebAPI.Buisness.Services;
 using BookHavenWebAPI.Core.Abstractions;
 using BookHavenWebAPI.CQS.Commands.AccountCommands;
 using BookHavenWebAPI.Database;
+using BookHavenWebAPI.Utils.JWTUtil;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -38,6 +40,8 @@ namespace BookHavenWebAPI
              
             //Dependency Injection Services
             builder.Services.AddScoped<IAccountService, AccountService>();
+            builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
+            builder.Services.AddScoped<IJWTUtil, JWTUtilSha256>();
 
 
 
