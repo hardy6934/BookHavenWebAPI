@@ -70,7 +70,6 @@ namespace BookHavenWebAPI.Controllers
         {
             try
             {
-
                 var refreshTokenDTO = await refreshTokenService.GetRefreshTokenByTokenAsNoTrackingAsync(model.RefreshToken);
                 if (refreshTokenDTO is not null)
                 {
@@ -99,14 +98,13 @@ namespace BookHavenWebAPI.Controllers
         {
             try
             { 
-                var accountDTO = await refreshTokenService.GetAccountByRefreshTokensTokenAsNoTrackingAsync(model.RefreshToken);
                 var refreshTokenDTO = await refreshTokenService.GetRefreshTokenByTokenAsNoTrackingAsync(model.RefreshToken);
 
-                if (accountDTO is not null && refreshTokenDTO is not null)
+                if (refreshTokenDTO is not null)
                 {
-                    var response = jwtUtil.GenerateTokenAsync(accountDTO);
-                    var res = await refreshTokenService.RemoveRefreshTokenAsync(refreshTokenDTO);
-                    return Ok(response);
+                    var accountDTO = await accountService.GetAccountByIdAsync(refreshTokenDTO.AccountId);
+                    var response = await jwtUtil.GenerateTokenAsync(accountDTO); 
+                    return Ok(await refreshTokenService.RemoveRefreshTokenAsync(refreshTokenDTO));
                 }
                 else return NotFound();
 

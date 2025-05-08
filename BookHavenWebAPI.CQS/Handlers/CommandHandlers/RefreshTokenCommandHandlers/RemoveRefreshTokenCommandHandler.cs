@@ -3,6 +3,7 @@ using BookHavenWebAPI.CQS.Commands.RefreshTokenCommands;
 using BookHavenWebAPI.Database;
 using BookHavenWebAPI.Database.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookHavenWebAPI.CQS.Handlers.CommandHandlers.RefreshTokenCommandHandlers
 {
@@ -17,9 +18,8 @@ namespace BookHavenWebAPI.CQS.Handlers.CommandHandlers.RefreshTokenCommandHandle
         }
 
         public async Task<int> Handle(RemoveRefreshTokenCommand request, CancellationToken cancellationToken)
-        {
+        {  
             context.RefreshTokens.Remove(mapper.Map<RefreshToken>(request.refreshTokenDTO)); 
-
             return await context.SaveChangesAsync(cancellationToken); 
         }
     }

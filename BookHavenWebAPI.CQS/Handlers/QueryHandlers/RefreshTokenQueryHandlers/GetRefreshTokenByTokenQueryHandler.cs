@@ -20,7 +20,7 @@ namespace BookHavenWebAPI.CQS.Handlers.QueryHandlers.RefreshTokenQueryHandlers
 
         public async Task<RefreshTokenDTO> Handle(GetRefreshTokenByTokenQuery request, CancellationToken cancellationToken)
         {
-            var ent = await context.RefreshTokens.FirstOrDefaultAsync(x => x.Token.Equals(request.Token), cancellationToken);
+            var ent = await context.RefreshTokens.AsNoTracking().FirstOrDefaultAsync(x => x.Token.Equals(request.Token), cancellationToken);
             return mapper.Map<RefreshTokenDTO>(ent);
         }
     }
