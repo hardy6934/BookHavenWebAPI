@@ -1,4 +1,6 @@
-﻿ 
+﻿
+using BookHavenWebAPI.DataBase.Entities;
+
 namespace BookHavenWebAPI.Database.Entities
 {
     public class Account: IBaseEntity
@@ -11,5 +13,7 @@ namespace BookHavenWebAPI.Database.Entities
         public string? PhoneNumber { get; set; }
         public string? Position { get; set; }
         public string? PictureWebPath { get; set; }
+
+        public List<Collection> Collections { get; set; }
     }
 }

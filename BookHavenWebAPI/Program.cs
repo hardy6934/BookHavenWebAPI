@@ -2,9 +2,11 @@ using Accessor.Buisness.Services;
 using BookHavenWebAPI.Buisness.Services;
 using BookHavenWebAPI.Core.Abstractions;
 using BookHavenWebAPI.CQS.Commands.AccountCommands;
-using BookHavenWebAPI.Database;
-using BookHavenWebAPI.Utils.JWTUtil;
+using BookHavenWebAPI.Database; 
+using BookHavenWebAPI.Utils.JWTUtil; 
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -41,9 +43,9 @@ namespace BookHavenWebAPI
             //Dependency Injection Services
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
+            builder.Services.AddScoped<IGenreService, GenreService>();
             builder.Services.AddScoped<IJWTUtil, JWTUtilSha256>();
-
-
+             
 
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi  

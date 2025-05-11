@@ -1,4 +1,6 @@
 ﻿
+using BookHavenWebAPI.DataBase.Entities;
+
 namespace BookHavenWebAPI.Database.Entities
 {
     public class Book: IBaseEntity
@@ -12,5 +14,6 @@ namespace BookHavenWebAPI.Database.Entities
         public int GenreId { get; set; }
         public Genre Genre { get; set; }
 
+        public List<CollectionBook> CollectionBooks { get; set; }
     }
 }

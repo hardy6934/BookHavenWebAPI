@@ -12,5 +12,7 @@ namespace BookHavenWebAPI.Core.DataTransferObjects
         public string? PhoneNumber { get; set; }
         public string? Position { get; set; }
         public string? PictureWebPath { get; set; }
+
+        public List<CollectionDTO> CollectionDTOs { get; set; }
     }
 }

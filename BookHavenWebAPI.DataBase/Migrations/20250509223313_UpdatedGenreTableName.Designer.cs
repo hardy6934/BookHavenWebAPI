@@ -3,6 +3,7 @@ using System;
 using BookHavenWebAPI.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BookHavenWebAPI.DataBase.Migrations
 {
     [DbContext(typeof(BookHavenContext))]
-    partial class BookHavenContextModelSnapshot : ModelSnapshot
+    [Migration("20250509223313_UpdatedGenreTableName")]
+    partial class UpdatedGenreTableName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,55 +24,6 @@ namespace BookHavenWebAPI.DataBase.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("BookHavenWebAPI.DataBase.Entities.Collection", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AccountId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccountId");
-
-                    b.ToTable("Collection");
-                });
-
-            modelBuilder.Entity("BookHavenWebAPI.DataBase.Entities.CollectionBook", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("BookId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("CollectionId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BookId");
-
-                    b.HasIndex("CollectionId");
-
-                    b.ToTable("CollectionBook");
-                });
 
             modelBuilder.Entity("BookHavenWebAPI.Database.Entities.Account", b =>
                 {
@@ -186,36 +140,6 @@ namespace BookHavenWebAPI.DataBase.Migrations
                     b.ToTable("RefreshTokens");
                 });
 
-            modelBuilder.Entity("BookHavenWebAPI.DataBase.Entities.Collection", b =>
-                {
-                    b.HasOne("BookHavenWebAPI.Database.Entities.Account", "Account")
-                        .WithMany("Collections")
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Account");
-                });
-
-            modelBuilder.Entity("BookHavenWebAPI.DataBase.Entities.CollectionBook", b =>
-                {
-                    b.HasOne("BookHavenWebAPI.Database.Entities.Book", "Book")
-                        .WithMany("CollectionBooks")
-                        .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BookHavenWebAPI.DataBase.Entities.Collection", "Collection")
-                        .WithMany("CollectionBooks")
-                        .HasForeignKey("CollectionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Book");
-
-                    b.Navigation("Collection");
-                });
-
             modelBuilder.Entity("BookHavenWebAPI.Database.Entities.Book", b =>
                 {
                     b.HasOne("BookHavenWebAPI.Database.Entities.Genre", "Genre")
@@ -236,21 +160,6 @@ namespace BookHavenWebAPI.DataBase.Migrations
                         .IsRequired();
 
                     b.Navigation("Account");
-                });
-
-            modelBuilder.Entity("BookHavenWebAPI.DataBase.Entities.Collection", b =>
-                {
-                    b.Navigation("CollectionBooks");
-                });
-
-            modelBuilder.Entity("BookHavenWebAPI.Database.Entities.Account", b =>
-                {
-                    b.Navigation("Collections");
-                });
-
-            modelBuilder.Entity("BookHavenWebAPI.Database.Entities.Book", b =>
-                {
-                    b.Navigation("CollectionBooks");
                 });
 #pragma warning restore 612, 618
         }

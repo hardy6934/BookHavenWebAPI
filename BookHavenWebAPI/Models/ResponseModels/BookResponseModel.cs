@@ -1,8 +1,6 @@
-﻿
-
-namespace BookHavenWebAPI.Core.DataTransferObjects
+﻿namespace BookHavenWebAPI.Models.ResponseModels
 {
-    public class BookDTO
+    public class BookResponseModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -11,8 +9,5 @@ namespace BookHavenWebAPI.Core.DataTransferObjects
         public bool IsFavorite { get; set; }
 
         public int GenreId { get; set; }
-        public GenreDTO GenreDTO { get; set; }
-
-        public List<CollectionBookDTO> CollectionBookDTOs { get; set; }
     }
 }

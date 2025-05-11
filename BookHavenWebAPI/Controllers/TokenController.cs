@@ -2,7 +2,7 @@
 using BookHavenWebAPI.Core.Abstractions;
 using BookHavenWebAPI.Core.DataTransferObjects;
 using BookHavenWebAPI.Models.RequestModels;
-using BookHavenWebAPI.Utils.JWTUtil;
+using BookHavenWebAPI.Utils.JWTUtil; 
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 
@@ -15,14 +15,15 @@ namespace BookHavenWebAPI.Controllers
         private readonly IMapper mapper;
         private readonly IAccountService accountService;
         private readonly IRefreshTokenService refreshTokenService;
-        private readonly IJWTUtil jwtUtil;
+        private readonly IJWTUtil jwtUtil; 
 
-        public TokenController(IMapper mapper, IAccountService accountService, IJWTUtil jwtUtil, IRefreshTokenService refreshTokenService)
+        public TokenController(IMapper mapper, IAccountService accountService, IJWTUtil jwtUtil, 
+            IRefreshTokenService refreshTokenService)
         {
             this.mapper = mapper;
             this.accountService = accountService;
             this.jwtUtil = jwtUtil;
-            this.refreshTokenService = refreshTokenService;
+            this.refreshTokenService = refreshTokenService; 
         }
 
         /// <summary>
@@ -37,7 +38,7 @@ namespace BookHavenWebAPI.Controllers
         public async Task<IActionResult> CreateToken([FromBody] AuthenticationRequestModel request)
         {
             try
-            {
+            {  
                 var accountDTO = await accountService.GetAccountByEmailAsync(request.Email);
                 if (accountDTO is null) 
                     return NotFound(new { Message = "Login is not exist" });  
