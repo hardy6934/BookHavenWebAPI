@@ -38,7 +38,7 @@ namespace BookHavenWebAPI
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             //dependency Injection Handlers  
-            builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining(typeof(AddAccountCommand)));
+            builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<AddAccountCommand>());
              
             //Dependency Injection Services
             builder.Services.AddScoped<IAccountService, AccountService>();
