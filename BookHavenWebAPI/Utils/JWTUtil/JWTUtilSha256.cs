@@ -31,7 +31,7 @@ namespace BookHavenWebAPI.Utils.JWTUtil
             {
                 new Claim(JwtRegisteredClaimNames.Sub, dto.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("D")),
-                new Claim(ClaimTypes.NameIdentifier, dto.Id.ToString("D"))
+                new Claim("AccountId", dto.Id.ToString("D"))
             };
 
             var JWTToken = new JwtSecurityToken(configuration["Token:Issuer"],

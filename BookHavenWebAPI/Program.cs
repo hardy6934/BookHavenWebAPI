@@ -44,6 +44,8 @@ namespace BookHavenWebAPI
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
             builder.Services.AddScoped<IGenreService, GenreService>();
+            builder.Services.AddScoped<IBookService, BookService>();
+            builder.Services.AddScoped<ICollectionService, CollectionService>();
             builder.Services.AddScoped<IJWTUtil, JWTUtilSha256>();
              
 

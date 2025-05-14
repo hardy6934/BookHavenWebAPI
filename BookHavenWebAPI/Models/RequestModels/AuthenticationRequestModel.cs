@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace BookHavenWebAPI.Models.RequestModels
 {
@@ -6,9 +7,12 @@ namespace BookHavenWebAPI.Models.RequestModels
     {
         [Required]
         [EmailAddress]
+        [DefaultValue("qwe@gmail.com")]
         public string Email { get; set; }
-        [Required] 
+        [Required]
         [MinLength(5)]
+
+        [DefaultValue("qwe@gmail.com")]
         public string Password { get; set; }
     }
 }

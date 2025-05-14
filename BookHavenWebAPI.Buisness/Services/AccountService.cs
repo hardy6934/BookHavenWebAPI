@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using BookHavenWebAPI.Core.Abstractions;
+﻿using BookHavenWebAPI.Core.Abstractions;
 using BookHavenWebAPI.Core.DataTransferObjects;
 using BookHavenWebAPI.CQS.Commands.AccountCommands;
 using BookHavenWebAPI.CQS.Queries.AccountQueries;
@@ -11,13 +10,11 @@ namespace BookHavenWebAPI.Buisness.Services
 {
     public class AccountService : IAccountService
     {
-        private readonly IMapper mapper;
         private readonly IMediator mediator;
         private readonly IConfiguration configuration;
 
-        public AccountService(IMapper mapper, IMediator mediator, IConfiguration configuration)
+        public AccountService(IMediator mediator, IConfiguration configuration)
         {
-            this.mapper = mapper;
             this.mediator = mediator;
             this.configuration = configuration;
         }

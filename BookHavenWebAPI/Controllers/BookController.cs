@@ -2,28 +2,28 @@
 using BookHavenWebAPI.Core.Abstractions;
 using BookHavenWebAPI.Core.DataTransferObjects;
 using BookHavenWebAPI.Models.RequestModels;
-using BookHavenWebAPI.Models.ResponseModels; 
+using BookHavenWebAPI.Models.ResponseModels;
 using Microsoft.AspNetCore.Mvc;
-using Serilog; 
+using Serilog;
 
 namespace BookHavenWebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GenreController : ControllerBase
+    public class BookController : Controller
     {
         private readonly IMapper mapper;
-        private readonly IGenreService genreService;
+        private readonly IBookService bookService;
 
-        public GenreController(IMapper mapper, IGenreService genreService)
+        public BookController(IMapper mapper, IBookService bookService)
         {
-            this.mapper = mapper;
-            this.genreService = genreService;
+            this.mapper = mapper; 
+            this.bookService = bookService;
         }
 
 
         /// <summary>
-        /// Create genre
+        /// Create Book
         /// </summary>
         /// <returns>OK</returns>
         [HttpPost]
@@ -31,20 +31,20 @@ namespace BookHavenWebAPI.Controllers
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> CreateGenreAsync([FromBody] GenreRequestModel request)
+        public async Task<IActionResult> CreateBookAsync([FromBody] BookRequestModel request)
         {
             try
             {
                 if (!ModelState.IsValid) return BadRequest();
 
-                if (await genreService.IsGenreExistAsync(request.Name))
-                    return StatusCode(409, new { Message = "Genre is exist" });
+                if (await bookService.IsBookExistAsync(request.Name))
+                    return StatusCode(409, new { Message = "Book is exist" });
 
-                var res = await genreService.CreateGenreAsync(mapper.Map<GenreDTO>(request));
+                var res = await bookService.CreateBookAsync(mapper.Map<BookDTO>(request));
 
-                return res > 0 ? 
-                    Ok(mapper.Map<GenreResponseModel>(await genreService.GetGenreByIdAsnyc(res))) 
-                    : StatusCode(500, "Something went wrong"); 
+                return res > 0 ?
+                    Ok(mapper.Map<BookResponseModel>(await bookService.GetBookByIdAsnyc(res)))
+                    : StatusCode(500, "Something went wrong");
             }
             catch (Exception ex)
             {
@@ -52,9 +52,10 @@ namespace BookHavenWebAPI.Controllers
                 return StatusCode(500);
             }
         }
+         
 
         /// <summary>
-        /// Update genre
+        /// Update Book
         /// </summary>
         /// <returns>OK</returns>
         [HttpPut]
@@ -62,19 +63,23 @@ namespace BookHavenWebAPI.Controllers
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> UpdateGenreAsync([FromBody] GenreRequestModel request)
+        public async Task<IActionResult> UpdateBookAsync([FromBody] BookRequestModel request)
         {
             try
             {
                 if (!ModelState.IsValid) return BadRequest();
 
-                if (await genreService.IsGenreExistAsync(request.Name))
-                    return StatusCode(409, new { Message = "Genre is exist" });
+                var ent = await bookService.GetBookByIdAsnyc(request.Id);
+                if (ent is null)
+                    return NotFound();
 
-                var res = await genreService.UpdateGenreAsync(mapper.Map<GenreDTO>(request));
+                if (request.Name != ent.Name && await bookService.IsBookExistAsync(request.Name))
+                    return StatusCode(409, new { Message = "Book is exist" });
 
-                return res > 0 ? 
-                    Ok(mapper.Map<GenreResponseModel>(await genreService.GetGenreByIdAsnyc(request.Id))) 
+                var res = await bookService.UpdateBookAsync(mapper.Map<BookDTO>(request));
+
+                return res > 0 ?
+                    Ok(mapper.Map<BookResponseModel>(await bookService.GetBookByIdAsnyc(request.Id)))
                     : StatusCode(500, "Something went wrong");
             }
             catch (Exception ex)
@@ -85,7 +90,7 @@ namespace BookHavenWebAPI.Controllers
         }
 
         /// <summary>
-        /// Remove genre
+        /// Remove Book
         /// </summary>
         /// <returns>OK</returns>
         [HttpDelete("{Id}")]
@@ -93,19 +98,18 @@ namespace BookHavenWebAPI.Controllers
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> RemoveGenreAsync(int Id)
+        public async Task<IActionResult> RemoveBookAsync(int Id)
         {
             try
             {
                 if (Id <= 0) return BadRequest();
 
-                var dto = await genreService.GetGenreByIdAsnyc(Id);
-
+                var dto = await bookService.GetBookByIdAsnyc(Id);  
                 if (dto is null) return NotFound();
 
-                var res = await genreService.RemoveGenreAsync(dto);
+                var res = await bookService.RemoveBookAsync(dto);
 
-                return res > 0 ? Ok() : StatusCode(500, "Something went wrong"); 
+                return res > 0 ? Ok() : StatusCode(500, "Something went wrong");
             }
             catch (Exception ex)
             {
@@ -115,7 +119,7 @@ namespace BookHavenWebAPI.Controllers
         }
 
         /// <summary>
-        /// Get genre by Id
+        /// Get Book by Id
         /// </summary>
         /// <returns>OK</returns>
         [HttpGet("{Id}")]
@@ -123,15 +127,15 @@ namespace BookHavenWebAPI.Controllers
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetGenreByIdAsync(int Id)
+        public async Task<IActionResult> GetBookByIdAsync(int Id)
         {
             try
             {
-                if (Id <= 0) return BadRequest(); 
+                if (Id <= 0) return BadRequest();
 
-                var res = await genreService.GetGenreByIdAsnyc(Id);
+                var res = await bookService.GetBookByIdAsnyc(Id);
 
-                return res is not null ? Ok(mapper.Map<GenreResponseModel>(res)) : StatusCode(500, "Something went wrong"); 
+                return res is not null ? Ok(mapper.Map<BookResponseModel>(res)) : StatusCode(500, "Something went wrong");
             }
             catch (Exception ex)
             {
@@ -141,23 +145,22 @@ namespace BookHavenWebAPI.Controllers
         }
 
         /// <summary>
-        /// Get genre for search
+        /// Get Book for search
         /// </summary>
         /// <returns>OK</returns>
         [HttpGet("Search")]
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(Nullable), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(Nullable), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(Nullable), StatusCodes.Status400BadRequest)] 
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetGenreForSearchAsync(string Name)
+        public async Task<IActionResult> GetBookForSearchAsync([FromQuery] string Name)
         {
             try
             {
-                if (string.IsNullOrEmpty(Name)) return BadRequest(); 
+                if (string.IsNullOrEmpty(Name)) return BadRequest();
 
-                var res = await genreService.GetAllGenresForSearchAsnyc(Name);
+                var res = await bookService.GetAllBooksForSearchAsnyc(Name);
 
-                return Ok(res.Select(mapper.Map<GenreResponseModel>));
+                return Ok(res.Select(mapper.Map<BookResponseModel>));
             }
             catch (Exception ex)
             {
@@ -167,7 +170,7 @@ namespace BookHavenWebAPI.Controllers
         }
 
         /// <summary>
-        /// Get all genres 
+        /// Get all Books 
         /// </summary>
         /// <returns>OK</returns>
         [HttpGet]
@@ -175,13 +178,13 @@ namespace BookHavenWebAPI.Controllers
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllGenresAsync()
+        public async Task<IActionResult> GetAllBooksAsync()
         {
             try
-            { 
-                var res = await genreService.GetAllGenresAsnyc();
+            {
+                var res = await bookService.GetAllBooksAsnyc();
 
-                return Ok(res.Select(mapper.Map<GenreResponseModel>)); 
+                return Ok(res.Select(mapper.Map<BookResponseModel>));
             }
             catch (Exception ex)
             {
@@ -189,6 +192,5 @@ namespace BookHavenWebAPI.Controllers
                 return StatusCode(500);
             }
         }
-
     }
 }

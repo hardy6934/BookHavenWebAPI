@@ -7,9 +7,9 @@ namespace BookHavenWebAPI.Database
     public class BookHavenContext: DbContext
     {
         public DbSet<Account> Accounts { get; set; }
-        public DbSet<Book> Roles { get; set; }
-        public DbSet<Collection> Collection { get; set; }
-        public DbSet<CollectionBook> CollectionBook { get; set; }
+        public DbSet<Book> Books { get; set; }
+        public DbSet<Collection> Collections { get; set; }
+        public DbSet<CollectionBook> CollectionBooks { get; set; }
         public DbSet<Genre> Genre { get; set; }  
         public DbSet<RefreshToken> RefreshTokens { get; set; } 
 
