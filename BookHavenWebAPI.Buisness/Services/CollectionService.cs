@@ -1,10 +1,8 @@
 ﻿using BookHavenWebAPI.Core.Abstractions;
 using BookHavenWebAPI.Core.DataTransferObjects;
 using BookHavenWebAPI.CQS.Commands.CollectionCommands;
-using BookHavenWebAPI.CQS.Queries.CollectionQueires;
-using BookHavenWebAPI.Database.Entities;
-using MediatR;
-using System.Xml.Linq;
+using BookHavenWebAPI.CQS.Queries.CollectionQueires; 
+using MediatR; 
 
 namespace BookHavenWebAPI.Buisness.Services
 {

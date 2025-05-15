@@ -4,7 +4,10 @@ using BookHavenWebAPI.Core.DataTransferObjects;
 using BookHavenWebAPI.Models.RequestModels;
 using BookHavenWebAPI.Models.ResponseModels;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace BookHavenWebAPI.Controllers
 {
@@ -45,17 +48,20 @@ namespace BookHavenWebAPI.Controllers
         }
 
         /// <summary>
-        /// TESTS
+        /// Get account
         /// </summary>
         /// <returns>OK</returns>
-        [HttpGet("{email}")]
+        [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAccountByEmail(string email)
-        { 
-            var dto = await accountService.GetAccountByEmailAsync(email);
+        public async Task<IActionResult> GetAccountAsync()
+        {
+            var emailClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
+
+            var dto = await accountService.GetAccountByEmailAsync(emailClaim);
 
             return dto is not null ? Ok(mapper.Map<AccountResponseModel>(dto)) : NotFound(); 
         } 

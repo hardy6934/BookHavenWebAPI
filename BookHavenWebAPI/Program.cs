@@ -3,10 +3,8 @@ using BookHavenWebAPI.Buisness.Services;
 using BookHavenWebAPI.Core.Abstractions;
 using BookHavenWebAPI.CQS.Commands.AccountCommands;
 using BookHavenWebAPI.Database; 
-using BookHavenWebAPI.Utils.JWTUtil; 
-using FluentValidation;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
+using BookHavenWebAPI.Utils.JWTUtil;  
+using Microsoft.AspNetCore.Authentication.JwtBearer; 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -46,6 +44,7 @@ namespace BookHavenWebAPI
             builder.Services.AddScoped<IGenreService, GenreService>();
             builder.Services.AddScoped<IBookService, BookService>();
             builder.Services.AddScoped<ICollectionService, CollectionService>();
+            builder.Services.AddScoped<ICollectionBookService, CollectionBookService>();
             builder.Services.AddScoped<IJWTUtil, JWTUtilSha256>();
              
 

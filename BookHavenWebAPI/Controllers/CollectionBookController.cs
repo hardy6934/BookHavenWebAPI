@@ -13,20 +13,22 @@ namespace BookHavenWebAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class CollectionController : ControllerBase
+    public class CollectionBookController : ControllerBase
     {
         private readonly IMapper mapper;
+        private readonly ICollectionBookService collectionBookService;
         private readonly ICollectionService collectionService;
 
-        public CollectionController(IMapper mapper, ICollectionService collectionService)
+        public CollectionBookController(IMapper mapper, ICollectionBookService collectionBookService, ICollectionService collectionService)
         {
             this.mapper = mapper;
+            this.collectionBookService = collectionBookService;
             this.collectionService = collectionService;
         }
 
 
         /// <summary>
-        /// Create Collection
+        /// Create CollectionBook
         /// </summary>
         /// <returns>OK</returns>
         [HttpPost]
@@ -34,30 +36,24 @@ namespace BookHavenWebAPI.Controllers
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> CreateCollectionAsync([FromBody] CollectionRequestModel request)
+        public async Task<IActionResult> CreateCollectionBookAsync([FromBody] CollectionBookRequestModel request)
         {
             try
             {
-                var accountIdClaim = User.FindFirst("AccountId").Value;
-                 
                 if (!ModelState.IsValid) return BadRequest();
 
-                if (int.TryParse(accountIdClaim, out int intAccountIdClaim))
-                {
-                    if (await collectionService.IsCollectionExistAsync(request.Name, intAccountIdClaim))
-                    return StatusCode(409, new { Message = "Collection is exist" });
-                     
+                var accountIdClaim = User.FindFirst("AccountId").Value;
+                if (!int.TryParse(accountIdClaim, out int intAccountIdClaim))
+                    return BadRequest("Token was invalid");
 
-                    var dto = mapper.Map<CollectionDTO>(request);
-                    dto.AccountId = intAccountIdClaim;
-                    var res = await collectionService.CreateCollectionAsync(dto);
+                if (await collectionBookService.IsCollectionBookExistAsync(request.BookId, request.CollectionId))
+                    return StatusCode(409, new { Message = "CollectionBook is exist" });
 
-                    return res > 0 ?
-                        Ok(mapper.Map<CollectionResponseModel>(await collectionService.GetCollectionByIdAsnyc(res, intAccountIdClaim)))
-                        : StatusCode(500, "Something went wrong");
-                }
-                else return BadRequest("Not a valid token");
-                
+                var res = await collectionBookService.CreateCollectionBookAsync(mapper.Map<CollectionBookDTO>(request));
+
+                return res > 0 ?
+                    Ok(mapper.Map<CollectionBookResponseModel>(await collectionBookService.GetCollectionBookByIdAsnyc(res, intAccountIdClaim)))
+                    : StatusCode(500, "Something went wrong");
             }
             catch (Exception ex)
             {
@@ -68,7 +64,7 @@ namespace BookHavenWebAPI.Controllers
 
 
         /// <summary>
-        /// Update Collection
+        /// Update Book
         /// </summary>
         /// <returns>OK</returns>
         [HttpPut]
@@ -76,30 +72,27 @@ namespace BookHavenWebAPI.Controllers
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> UpdateCollectionAsync([FromBody] CollectionRequestModel request)
+        public async Task<IActionResult> UpdateBookAsync([FromBody] CollectionBookRequestModel request)
         {
             try
             {
                 if (!ModelState.IsValid) return BadRequest();
 
-                var accountIdClaim = User.FindFirst("AccountId").Value; 
+                var accountIdClaim = User.FindFirst("AccountId").Value;
                 if (!int.TryParse(accountIdClaim, out int intAccountIdClaim))
                     return BadRequest("Token was invalid");
 
-                var ent = await collectionService.GetCollectionByIdAsnyc(request.Id, intAccountIdClaim);
+                var ent = await collectionBookService.GetCollectionBookByIdAsnyc(request.Id, intAccountIdClaim);
                 if (ent is null)
                     return NotFound();
 
-                if (request.Name != ent.Name && await collectionService.IsCollectionExistAsync(request.Name, intAccountIdClaim))
-                    return StatusCode(409, new { Message = "Collection is exist" });
-
-
-                var dto = mapper.Map<CollectionDTO>(request);
-                dto.AccountId = ent.AccountId;
-                var res = await collectionService.UpdateCollectionAsync(dto);
+                if (request.BookId != ent.BookId && request.CollectionId != ent.CollectionId)
+                    return BadRequest("BookId and CollectionId is unchangeable fields!");
+                 
+                var res = await collectionBookService.UpdateCollectionBookAsync(mapper.Map<CollectionBookDTO>(request));
 
                 return res > 0 ?
-                    Ok(mapper.Map<CollectionResponseModel>(await collectionService.GetCollectionByIdAsnyc(request.Id, intAccountIdClaim)))
+                    Ok(mapper.Map<CollectionBookResponseModel>(await collectionBookService.GetCollectionBookByIdAsnyc(request.Id, intAccountIdClaim)))
                     : StatusCode(500, "Something went wrong");
             }
             catch (Exception ex)
@@ -110,7 +103,7 @@ namespace BookHavenWebAPI.Controllers
         }
 
         /// <summary>
-        /// Remove Collection
+        /// Remove Book
         /// </summary>
         /// <returns>OK</returns>
         [HttpDelete("{Id}")]
@@ -118,20 +111,20 @@ namespace BookHavenWebAPI.Controllers
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> RemoveCollectionAsync(int Id)
+        public async Task<IActionResult> RemoveBookAsync(int Id)
         {
             try
-            { 
+            {
                 if (Id <= 0) return BadRequest();
 
                 var accountIdClaim = User.FindFirst("AccountId").Value;
                 if (!int.TryParse(accountIdClaim, out int intAccountIdClaim))
                     return BadRequest("Token was invalid");
 
-                var dto = await collectionService.GetCollectionByIdAsnyc(Id, intAccountIdClaim);
+                var dto = await collectionBookService.GetCollectionBookByIdAsnyc(Id, intAccountIdClaim);
                 if (dto is null) return NotFound();
 
-                var res = await collectionService.RemoveCollectionAsync(dto);
+                var res = await collectionBookService.RemoveCollectionBookAsync(dto);
 
                 return res > 0 ? Ok() : StatusCode(500, "Something went wrong");
             }
@@ -142,8 +135,9 @@ namespace BookHavenWebAPI.Controllers
             }
         }
 
+
         /// <summary>
-        /// Get Collection by Id
+        /// Get CollectionBook by Id
         /// </summary>
         /// <returns>OK</returns>
         [HttpGet("{Id}")]
@@ -151,7 +145,7 @@ namespace BookHavenWebAPI.Controllers
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetCollectionByIdAsync(int Id)
+        public async Task<IActionResult> GetCollectionBookByIdAsync(int Id)
         {
             try
             {
@@ -161,9 +155,9 @@ namespace BookHavenWebAPI.Controllers
                 if (!int.TryParse(accountIdClaim, out int intAccountIdClaim))
                     return BadRequest("Token was invalid");
 
-                var res = await collectionService.GetCollectionByIdAsnyc(Id, intAccountIdClaim);
+                var res = await collectionBookService.GetCollectionBookByIdAsnyc(Id, intAccountIdClaim);
 
-                return res is not null ? Ok(mapper.Map<CollectionResponseModel>(res)) : NotFound();
+                return res is not null ? Ok(mapper.Map<CollectionBookResponseModel>(res)) : NotFound();
             }
             catch (Exception ex)
             {
@@ -173,26 +167,25 @@ namespace BookHavenWebAPI.Controllers
         }
 
         /// <summary>
-        /// Get Collection for search
+        /// Get CollectionBook for search in collection
         /// </summary>
         /// <returns>OK</returns>
         [HttpGet("Search")]
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetCollectionForSearchAsync([FromQuery] string Name)
+        public async Task<IActionResult> GetCollectionBookForSearchAsync([FromQuery] string name, int collectionId)
         {
             try
-            {
-                if (string.IsNullOrEmpty(Name)) return BadRequest();
+            { 
 
                 var accountIdClaim = User.FindFirst("AccountId").Value;
                 if (!int.TryParse(accountIdClaim, out int intAccountIdClaim))
                     return BadRequest("Token was invalid");
 
-                var res = await collectionService.GetAllCollectionsForSearchAsnyc(Name, intAccountIdClaim);
+                var res = await collectionBookService.GetAllCollectionBooksInColectionForSearchAsnyc(name, collectionId, intAccountIdClaim);
 
-                return Ok(res.Select(mapper.Map<CollectionResponseModel>));
+                return Ok(res.Select(mapper.Map<CollectionBookResponseModel>));
             }
             catch (Exception ex)
             {
@@ -202,15 +195,15 @@ namespace BookHavenWebAPI.Controllers
         }
 
         /// <summary>
-        /// Get all Collection 
+        /// Get all CollectionBook for collection
         /// </summary>
         /// <returns>OK</returns>
-        [HttpGet]
+        [HttpGet("ByCollectionId")]
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllCollectionsAsync()
+        public async Task<IActionResult> GetAllCollectionBooksAsync([FromQuery] int collectionId)
         {
             try
             {
@@ -218,9 +211,9 @@ namespace BookHavenWebAPI.Controllers
                 if (!int.TryParse(accountIdClaim, out int intAccountIdClaim))
                     return BadRequest("Token was invalid");
 
-                var res = await collectionService.GetAllCollectionsAsnyc(intAccountIdClaim);
+                var res = await collectionBookService.GetAllCollectionBooksInColectionAsnyc(collectionId, intAccountIdClaim);
 
-                return Ok(res.Select(mapper.Map<CollectionResponseModel>));
+                return Ok(res.Select(mapper.Map<CollectionBookResponseModel>));
             }
             catch (Exception ex)
             {
@@ -228,6 +221,7 @@ namespace BookHavenWebAPI.Controllers
                 return StatusCode(500);
             }
         }
+
 
     }
 }

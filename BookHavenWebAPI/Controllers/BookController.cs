@@ -3,6 +3,8 @@ using BookHavenWebAPI.Core.Abstractions;
 using BookHavenWebAPI.Core.DataTransferObjects;
 using BookHavenWebAPI.Models.RequestModels;
 using BookHavenWebAPI.Models.ResponseModels;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 
@@ -10,6 +12,7 @@ namespace BookHavenWebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class BookController : Controller
     {
         private readonly IMapper mapper;
@@ -135,7 +138,7 @@ namespace BookHavenWebAPI.Controllers
 
                 var res = await bookService.GetBookByIdAsnyc(Id);
 
-                return res is not null ? Ok(mapper.Map<BookResponseModel>(res)) : StatusCode(500, "Something went wrong");
+                return res is not null ? Ok(mapper.Map<BookResponseModel>(res)) : NotFound();
             }
             catch (Exception ex)
             {

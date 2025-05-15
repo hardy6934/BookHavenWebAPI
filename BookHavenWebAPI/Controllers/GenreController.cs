@@ -2,7 +2,9 @@
 using BookHavenWebAPI.Core.Abstractions;
 using BookHavenWebAPI.Core.DataTransferObjects;
 using BookHavenWebAPI.Models.RequestModels;
-using BookHavenWebAPI.Models.ResponseModels; 
+using BookHavenWebAPI.Models.ResponseModels;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Serilog; 
 
@@ -10,6 +12,7 @@ namespace BookHavenWebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class GenreController : ControllerBase
     {
         private readonly IMapper mapper;
