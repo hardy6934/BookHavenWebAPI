@@ -16,6 +16,7 @@ namespace BookHavenWebAPI.Database
         public BookHavenContext(DbContextOptions<BookHavenContext> options)
             : base(options)
         { 
+
         }
     }
 }
