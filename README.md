@@ -17,8 +17,8 @@
 1. Склонируйте репозиторий:
 
    ```bash
-   git clone https://github.com/your-username/bookhaven.git
-   cd bookhaven
+   git clone https://github.com/hardy6934/BookHavenWebAPI.git
+   cd BookHavenWebAPI
    ```
 
 2. Постройте и запустите контейнеры:
@@ -40,7 +40,7 @@
 После запуска контейнеров:
 
 * 🔗 [**Adminer**](http://localhost:8082) — подключение к базе данных
-* 🔗 [**API (Swagger, если есть)**](http://localhost:8080/swagger/index.html)
+* 🔗 [**API (Swagger)**](http://localhost:8080/swagger/index.html)
 
 **Параметры подключения к Adminer:**
 
@@ -95,47 +95,10 @@
 
 ---
 
-## ⚙️ Конфигурация подключения к БД (Docker)
-
-```env
-ConnectionStrings__Default=Host=postgres;Port=5432;Database=bookhaven_db;Username=postgres;Password=1234
-```
-
-⚠️ Обратите внимание: в `docker-compose.yml` PostgreSQL маппится на порт `5433` хоста, но **внутри контейнеров** он остаётся `5432`, поэтому `Host=postgres:5432` внутри API — корректно.
-
----
 
 ## 🥈 Миграции EF Core
 
-Миграции применяются автоматически при запуске `BookHavenContext`:
+Миграции применяются автоматически при запуске проекта!
 
-```csharp 
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<BookHavenContext>();
-    db.Database.Migrate();
-}
-```
 
----
-
-## 📌 Полезные команды
-
-Создание новой миграции:
-
-```bash
-dotnet ef migrations add InitialCreate -p BookHavenWebAPI.DataBase -s BookHavenWebAPI
-```
-
-Применение миграций:
-
-```bash
-dotnet ef database update -p BookHavenWebAPI.DataBase -s BookHavenWebAPI
-```
-
----
-
-## 🛠️ Автор
-
-Разработано с ❤️ для дипломного проекта.
-Контакт: \[ваш email / GitHub / Telegram]
+ 
