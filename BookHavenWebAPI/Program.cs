@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using StackExchange.Redis;
 using System.Text;
 
 namespace BookHavenWebAPI
@@ -28,17 +29,25 @@ namespace BookHavenWebAPI
             .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
             .CreateLogger();
 
-            //dependency Injection DataBase
+
+            //dependency injection Redis
+            builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+            {
+                var configuration = builder.Configuration.GetConnectionString("Redis");
+                return ConnectionMultiplexer.Connect(configuration);
+            });
+
+            //dependency injection DataBase
             var connectionString = builder.Configuration.GetConnectionString("Default");
             builder.Services.AddDbContext<BookHavenContext>(optionsBuilder => optionsBuilder.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 
-            //dependency Injection AutoMapper
+            //dependency injection AutoMapper
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-            //dependency Injection Handlers  
+            //dependency injection Handlers  
             builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<AddAccountCommand>());
              
-            //Dependency Injection Services
+            //dependency injection Services
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
             builder.Services.AddScoped<IGenreService, GenreService>();
@@ -46,6 +55,7 @@ namespace BookHavenWebAPI
             builder.Services.AddScoped<ICollectionService, CollectionService>();
             builder.Services.AddScoped<ICollectionBookService, CollectionBookService>();
             builder.Services.AddScoped<IJWTUtil, JWTUtilSha256>();
+            builder.Services.AddScoped<IRedisCacheService, RedisCacheService>();
              
 
             builder.Services.AddControllers();
@@ -108,11 +118,11 @@ namespace BookHavenWebAPI
             var app = builder.Build();
 
 
-            //using (var scope = app.Services.CreateScope())
-            //{
-            //    var db = scope.ServiceProvider.GetRequiredService<BookHavenContext>();
-            //    db.Database.Migrate();
-            //}
+            using (var scope = app.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<BookHavenContext>();
+                db.Database.Migrate();
+            }
 
             //// Configure the HTTP request pipeline.
             //if (app.Environment.IsDevelopment())

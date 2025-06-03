@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
 using BookHavenWebAPI.Core.Abstractions;
-using BookHavenWebAPI.Core.DataTransferObjects;
+using BookHavenWebAPI.Core.DataTransferObjects; 
 using BookHavenWebAPI.Models.RequestModels;
 using BookHavenWebAPI.Models.ResponseModels;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;  
 using Serilog;
+using StackExchange.Redis;
+using System.Text.Json;
 
 namespace BookHavenWebAPI.Controllers
 {
@@ -17,11 +19,13 @@ namespace BookHavenWebAPI.Controllers
     {
         private readonly IMapper mapper;
         private readonly IBookService bookService;
+        private readonly IRedisCacheService redisCacheService;
 
-        public BookController(IMapper mapper, IBookService bookService)
-        {
-            this.mapper = mapper; 
+        public BookController(IMapper mapper, IBookService bookService, IRedisCacheService redisCacheService)
+        { 
+            this.mapper = mapper;
             this.bookService = bookService;
+            this.redisCacheService = redisCacheService;
         }
 
 
@@ -134,15 +138,31 @@ namespace BookHavenWebAPI.Controllers
         {
             try
             {
-                if (Id <= 0) return BadRequest();
+                if (Id <= 0)
+                    return BadRequest();
 
+                // Ключ Redis
+                var key = $"bookById:{Id}";
+                 
+                var redisRes = await redisCacheService.GetAsync(key);
+                if (!string.IsNullOrEmpty(redisRes))
+                {
+                    var book = JsonSerializer.Deserialize<BookDTO>(redisRes);
+                    return Ok(mapper.Map<BookResponseModel>(book));
+                }
+                 
                 var res = await bookService.GetBookByIdAsnyc(Id);
+                if (res is null)
+                    return NotFound();
 
-                return res is not null ? Ok(mapper.Map<BookResponseModel>(res)) : NotFound();
+                // Кешируем в Redis 
+                await redisCacheService.SetAsync(key, JsonSerializer.Serialize(res), TimeSpan.FromMinutes(10));
+
+                return Ok(mapper.Map<BookResponseModel>(res));
             }
             catch (Exception ex)
             {
-                Log.Error($"{ex.Message}. {Environment.NewLine}  {ex.StackTrace}");
+                Log.Error($"{ex.Message}{Environment.NewLine}{ex.StackTrace}");
                 return StatusCode(500);
             }
         }

@@ -1,5 +1,5 @@
 # Этап сборки
-FROM mcr.microsoft.com/dotnet/sdk:9.0-preview AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0.200 AS build
 
 WORKDIR /src
 
@@ -10,19 +10,20 @@ COPY BookHavenWebAPI.Buisness/BookHavenWebAPI.Buisness.csproj ./BookHavenWebAPI.
 COPY BookHavenWebAPI.Core/BookHavenWebAPI.Core.csproj ./BookHavenWebAPI.Core/
 COPY BookHavenWebAPI.CQS/BookHavenWebAPI.CQS.csproj ./BookHavenWebAPI.CQS/
 COPY BookHavenWebAPI.DataBase/BookHavenWebAPI.DataBase.csproj ./BookHavenWebAPI.DataBase/
+COPY BookHavenWebAPI.Tests/BookHavenWebAPI.Tests.csproj ./BookHavenWebAPI.Tests/
 
 # Восстанавливаем зависимости
 RUN dotnet restore
 
 # Копируем остальные файлы
 COPY . .
-
+ 
 # Публикуем релизную сборку
 WORKDIR /src/BookHavenWebAPI
 RUN dotnet publish -c Release -o /app/publish
 
 # Этап рантайма
-FROM mcr.microsoft.com/dotnet/aspnet:9.0-preview AS final
+FROM mcr.microsoft.com/dotnet/aspnet:9.0.2 AS final
 WORKDIR /app
 COPY --from=build /app/publish ./
 

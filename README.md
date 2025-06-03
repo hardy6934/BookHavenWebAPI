@@ -32,6 +32,8 @@
    * 🐘 **PostgreSQL** — порт `5433`
    * 💂 **Adminer** — веб-интерфейс по порту `8082`
    * 🚀 **ASP.NET API** — порт `8080`
+   * 🟥 **Redis** — порт `6379`
+   * 🧭 **Redisinsight** — порт `8001` 
 
 ---
 
@@ -40,7 +42,8 @@
 После запуска контейнеров:
 
 * 🔗 [**Adminer**](http://localhost:8082) — подключение к базе данных
-* 🔗 [**API (Swagger)**](http://localhost:8080/swagger/index.html)
+* 🔗 [**API (Swagger)**](http://localhost:8080/swagger/index.html) - страница Swagger
+* 🔗 [**Redisinsight**](http://localhost:8001) - подключение к Redis
 
 **Параметры подключения к Adminer:**
 
@@ -82,6 +85,7 @@
 * `BookHavenWebAPI.CQS` — команды и запросы
 * `BookHavenWebAPI.Buisness` — реализация бизнес-логики
 * `BookHavenWebAPI.DataBase` — миграции и конфигурации EF Core
+* `BookHavenWebAPI.Tests` — Тесты приложения
 
 ---
 
@@ -92,6 +96,8 @@
 | `bookhaven-api` | ASP.NET Web API        | `8080` |
 | `bookhaven-db`  | PostgreSQL база данных | `5433` |
 | `adminer`       | UI для PostgreSQL      | `8082` |
+| `Redis`         | Redis база данных      | `6379` |
+| `Redisinsight`  | UI для Redis           | `8001` |
 
 ---
 
